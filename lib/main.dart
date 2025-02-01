@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:intl/intl.dart';
 
 void main() {
@@ -12,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Create Itinerary',
+      title: 'Travel Assistant',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -30,60 +32,85 @@ class CreateItineraryPage extends StatefulWidget {
 }
 
 class _CreateItineraryPageState extends State<CreateItineraryPage> {
-  String? _selectedDestination;
-  DateTime? _selectedDate;
-  String? _selectedBudget;
+  String? selectedDestination;
+  DateTime? selectedDate;
+  String? selectedBudget;
+  String itinerary = "Your itinerary will appear here.";
 
   final List<String> destinations = [
-    "New York",
     "Paris",
     "Tokyo",
+    "New York",
     "London",
     "Dubai"
   ];
   final List<String> budgetOptions = ["Low", "Medium", "High"];
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-    if (picked != null && picked != _selectedDate) {
+
+    if (picked != null && picked != selectedDate) {
       setState(() {
-        _selectedDate = picked;
+        selectedDate = picked;
       });
     }
   }
 
-  void _submitItinerary() {
-    if (_selectedDestination == null ||
-        _selectedDate == null ||
-        _selectedBudget == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select all fields!")),
-      );
+  Future<void> fetchItinerary() async {
+    if (selectedDestination == null ||
+        selectedDate == null ||
+        selectedBudget == null) {
+      setState(() {
+        itinerary = "Please select all fields.";
+      });
       return;
     }
 
-    String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate!);
+    String prompt =
+        "Create a travel itinerary for a trip to $selectedDestination on $formattedDate with a $selectedBudget budget. Include places to visit, restaurants, and accommodations.";
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Itinerary Summary"),
-        content: Text(
-          "Destination: $_selectedDestination\nDate: $formattedDate\nBudget: $_selectedBudget",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("OK"),
-          ),
-        ],
-      ),
-    );
+    const String apiKey =
+        "AIzaSyBZmER7mtVUYnP0aouNGAsgdZLTocfsMpA"; // Replace with your API Key
+    final url = Uri.parse(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey");
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "contents": [
+            {
+              "parts": [
+                {"text": prompt}
+              ]
+            }
+          ]
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          itinerary = data["candidates"][0]["content"]["parts"][0]["text"] ??
+              "No response from AI.";
+        });
+      } else {
+        setState(() {
+          itinerary = "Error: ${response.statusCode} - ${response.body}";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        itinerary = "Failed to connect to server: $e";
+      });
+    }
   }
 
   @override
@@ -95,54 +122,72 @@ class _CreateItineraryPageState extends State<CreateItineraryPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Select Destination",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            DropdownButtonFormField<String>(
-              value: _selectedDestination,
+            const Text("Select Destination:", style: TextStyle(fontSize: 18)),
+            DropdownButton<String>(
+              value: selectedDestination,
               hint: const Text("Choose a destination"),
+              isExpanded: true,
               items: destinations.map((String destination) {
                 return DropdownMenuItem<String>(
                   value: destination,
                   child: Text(destination),
                 );
               }).toList(),
-              onChanged: (value) => setState(() {
-                _selectedDestination = value;
-              }),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedDestination = newValue;
+                });
+              },
             ),
             const SizedBox(height: 20),
-            const Text("Select Date",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            TextButton(
-              onPressed: () => _selectDate(context),
-              child: Text(
-                _selectedDate == null
-                    ? "Pick a date"
-                    : DateFormat('yyyy-MM-dd').format(_selectedDate!),
-                style: const TextStyle(fontSize: 16),
-              ),
+            const Text("Select Date:", style: TextStyle(fontSize: 18)),
+            Row(
+              children: [
+                Text(
+                  selectedDate == null
+                      ? "No date selected"
+                      : DateFormat('yyyy-MM-dd').format(selectedDate!),
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () => selectDate(context),
+                  child: const Text("Pick Date"),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
-            const Text("Select Budget",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            DropdownButtonFormField<String>(
-              value: _selectedBudget,
-              hint: const Text("Choose a budget"),
+            const Text("Select Budget:", style: TextStyle(fontSize: 18)),
+            DropdownButton<String>(
+              value: selectedBudget,
+              hint: const Text("Choose budget"),
+              isExpanded: true,
               items: budgetOptions.map((String budget) {
                 return DropdownMenuItem<String>(
                   value: budget,
                   child: Text(budget),
                 );
               }).toList(),
-              onChanged: (value) => setState(() {
-                _selectedBudget = value;
-              }),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedBudget = newValue;
+                });
+              },
             ),
             const SizedBox(height: 30),
             Center(
               child: ElevatedButton(
-                onPressed: _submitItinerary,
-                child: const Text("Submit Itinerary"),
+                onPressed: fetchItinerary,
+                child: const Text("Generate Itinerary"),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  itinerary,
+                  style: const TextStyle(fontSize: 18),
+                ),
               ),
             ),
           ],
