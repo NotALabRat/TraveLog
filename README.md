@@ -27,9 +27,10 @@ o	Dietary and accommodation preferences
 
 •	Frontend: Flutter (for cross-platform mobile development)
 •	APIs Used: 
-oGoogle Maps API (for location services and navigation)
-oGoogle Translate API (for language translation)
-oGemini API / GPT (for AI-powered itinerary recommendations and assistance)
+
+o	Google Maps API (for location services and navigation)
+o	Google Translate API (for language translation)
+o	Gemini API / GPT (for AI-powered itinerary recommendations and assistance)
 
 ## Installation
 1.	Clone the repository: 
