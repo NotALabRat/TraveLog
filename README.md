@@ -50,38 +50,7 @@ Tools used:
 
 ## Implementation
 
-
-## Features
-1. Itinerary Planner
-•	Generates optimized travel itineraries based on:
-o	Duration of stay
-o	Focus-places (must-visit locations)
-o	Dietary and accommodation preferences
-•	Suggests activities and local attractions.
-2. Real-Time Language Translation
-•	Integrated in-app translator for easy communication with locals.
-•	Supports multiple languages using Google Translate API.
-3. Flight Booking
-•	Input budget and travel dates to find the best available flights.
-•	Book flights directly from the app.
-•	Get notified about price changes and offers.
-4. Travel Documentation
-•	Provides a checklist of documents required for flights and entry at destinations.
-•	Helps manage and store digital copies of travel documents securely.
-5. Community & Reviews
-•	Travelers can publish reviews and provide suggestions.
-•	Helps new travelers make informed decisions based on user-generated content.
-
-## Tech Stack
-
-•	Frontend: Flutter (for cross-platform mobile development)
-•	APIs Used: 
-
-o	Google Maps API (for location services and navigation)
-o	Gemini AI API (for language translation)
-o	Gemini API (for AI-powered itinerary recommendations and assistance)
-•   Backend: Flask
-•   Connection between modules : XML Connector
+The app is implemented using flutter on the front-end with Gemini API supporting in the back.We use Flask for the back-end framework. The connection between modules are established using XMLConnect.
 
 ## Installation
 1.	Clone the repository: 
@@ -90,36 +59,59 @@ o	Gemini API (for AI-powered itinerary recommendations and assistance)
 4.	cd TraveLog
 5.	Install dependencies: 
 6.	flutter pub get
-7.	Run the app: 
+7.	Run the app.py 
 8.	flutter run
 
-## Future Enhancements
-•	AI-powered travel recommendations based on user preferences.
-•	Offline language translation support.
-•	Integration with hotel and car rental services.
-•	Emergency support and local assistance feature.
+## Project Documentation
 
-## Contributing
-We welcome contributions! Please follow these steps:
-1.	Fork the repository.
-2.	Create a new branch (feature-branch-name).
-3.	Commit your changes.
-4.	Push to your branch and create a Pull Request.
+TraveLog is an all-in-one travel companion app.
+Key Features:
+Budget-Friendly Flight Booking: Search and book affordable flights.
+Itinerary Planning: Personalized itineraries based on user preferences and budget.
+Document Assistance: Manage essential travel documents like visas and insurance.
+Real-Time Translation: Text and voice translation for seamless communication.
 
-## License![WhatsApp Image 2025-02-02 at 10 27 12_d42aae7d](https://github.com/user-attachments/assets/54b5cf05-aa3e-47ba-8bc7-2c97d641bff0)
+Tech Stack:
+Flutter: Cross-platform development for Android and iOS.
+
+Benefits:
+Simplifies travel planning.
+Enhances communication in foreign countries.
+Provides a user-friendly experience for seamless travel.
+
+## Screenshots
+
 ![WhatsApp Image 2025-02-02 at 10 27 12_d58aed8a](https://github.com/user-attachments/assets/fbc309c3-3565-4ec9-a74d-8162260a670e)
+TraveLog - HomePage
+
+![WhatsApp Image 2025-02-02 at 10 27 12_d42aae7d](https://github.com/user-attachments/assets/54b5cf05-aa3e-47ba-8bc7-2c97d641bff0)
+Creating Itinerary
+
 ![WhatsApp Image 2025-02-02 at 10 27 12_f4a4c27d](https://github.com/user-attachments/assets/1e35a7a8-52ae-46b5-b687-6aae716762dc)
+Translation Functionality
+
+## Diagrams
+![Untitled-2025-02-02-1142](https://github.com/user-attachments/assets/b98c4af3-4226-4ce0-a406-0320f2b95967)
+User input -> Gemini API -> Output -> Flutter
+
+## Project Demo
+
+Videos
+
+https://drive.google.com/drive/folders/18yq5qhL2PsvZfQm3VLvN68us06SX0WaW?usp=drive_link
+
+## Additional Demo
+
+..
+
+## Team Contributions
+
+1. Bindhuja M - ReadMe , Flask Setup
+2. Mariam Biju- UI & Integration,Work-flow diagram
+3. Nandana Suresh - Backend - API integration
+
+
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-This project is a starting point for a Flutter application.
-
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
