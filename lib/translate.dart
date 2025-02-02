@@ -15,8 +15,9 @@ class TranslatorApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'In-App Translator',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.deepPurple,
+        fontFamily: 'Roboto',
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const TranslatorPage(),
     );
@@ -33,34 +34,42 @@ class TranslatorPage extends StatefulWidget {
 class _TranslatorPageState extends State<TranslatorPage> {
   final TextEditingController _textController = TextEditingController();
   String translatedText = "Your translation will appear here.";
-  String? selectedLanguage;
+  String? selectedSourceLanguage;
+  String? selectedTargetLanguage;
 
   final List<String> languages = [
+    "English",
     "French",
     "Spanish",
     "German",
     "Chinese",
     "Japanese",
-    "Hindi"
+    "Hindi",
+    "Italian",
+    "Portuguese",
+    "Russian",
+    "Arabic",
   ];
 
   bool _isLoading = false;
 
   // Define your Gemini API key here
-  final String apiKey =
-      "AIzaSyBZmER7mtVUYnP0aouNGAsgdZLTocfsMpA"; // Replace with your actual API key
+  final String apiKey = "AIzaSyBZmER7mtVUYnP0aouNGAsgdZLTocfsMpA";
 
   // Function to handle translation using Gemini API
   Future<void> translateText() async {
-    if (_textController.text.isEmpty || selectedLanguage == null) {
+    if (_textController.text.isEmpty ||
+        selectedSourceLanguage == null ||
+        selectedTargetLanguage == null) {
       setState(() {
-        translatedText = "Please enter text and select a language.";
+        translatedText =
+            "Please enter text and select source and target languages.";
       });
       return;
     }
 
     String prompt =
-        "Translate the following text into $selectedLanguage: \"${_textController.text}\"";
+        "Translate the following text from $selectedSourceLanguage to $selectedTargetLanguage: \"${_textController.text}\"";
 
     final url = Uri.parse(
         "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey");
@@ -109,46 +118,107 @@ class _TranslatorPageState extends State<TranslatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("In-App Translator")),
+      appBar: AppBar(
+        title: const Text("In-App Translator"),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text("Enter text to translate:",
-                style: TextStyle(fontSize: 18)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
             TextField(
               controller: _textController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[200],
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide.none),
                 hintText: "Type your text here",
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              ),
+              maxLines: 5,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 20),
+            const Text("Select Source Language:",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.grey[200],
+              ),
+              child: DropdownButton<String>(
+                value: selectedSourceLanguage,
+                hint: const Text("Choose source language"),
+                isExpanded: true,
+                iconSize: 30,
+                items: languages.map((String lang) {
+                  return DropdownMenuItem<String>(
+                    value: lang,
+                    child: Text(lang),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedSourceLanguage = newValue;
+                  });
+                },
               ),
             ),
             const SizedBox(height: 20),
             const Text("Select Target Language:",
-                style: TextStyle(fontSize: 18)),
-            DropdownButton<String>(
-              value: selectedLanguage,
-              hint: const Text("Choose a language"),
-              isExpanded: true,
-              items: languages.map((String lang) {
-                return DropdownMenuItem<String>(
-                  value: lang,
-                  child: Text(lang),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedLanguage = newValue;
-                });
-              },
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.grey[200],
+              ),
+              child: DropdownButton<String>(
+                value: selectedTargetLanguage,
+                hint: const Text("Choose target language"),
+                isExpanded: true,
+                iconSize: 30,
+                items: languages.map((String lang) {
+                  return DropdownMenuItem<String>(
+                    value: lang,
+                    child: Text(lang),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedTargetLanguage = newValue;
+                  });
+                },
+              ),
             ),
             const SizedBox(height: 30),
             Center(
               child: ElevatedButton(
                 onPressed: _isLoading ? null : translateText,
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
                 child: _isLoading
-                    ? const CircularProgressIndicator()
+                    ? const CircularProgressIndicator(
+                        color: Color(0xFFD81B60),
+                      )
                     : const Text("Translate"),
               ),
             ),
@@ -157,7 +227,7 @@ class _TranslatorPageState extends State<TranslatorPage> {
               child: SingleChildScrollView(
                 child: Text(
                   translatedText,
-                  style: const TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18, color: Colors.black87),
                 ),
               ),
             ),
