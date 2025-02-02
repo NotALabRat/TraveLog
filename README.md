@@ -1,6 +1,24 @@
 # TraveLog
 
+## Basic details
+
+## Team Name : Viktor Nation
+Team Members
+Member 1:Bindhuja M - Mar Athanasius College of Engineering,Kothamangalam
+Member 2:Mariam Biju - Mar Athanasius College of Engineering,Kothamangalam
+Member 3:Nandana Suresh - Mar Athanasius College of Engineering,Kothamangalam
+
+## Hosted Project Link
+
+https://drive.google.com/drive/folders/18yq5qhL2PsvZfQm3VLvN68us06SX0WaW?usp=drive_link
+
+## Project description
+
 TraveLog is an all-in-one travel companion app designed to enhance the travel experience for users by providing budget-friendly flight booking, itinerary planning, document assistance, and real-time translation. It streamlines the entire travel process, making trips more efficient and enjoyable.
+
+## Problem Statement
+
+
 
 ## Features
 1. Itinerary Planner
