@@ -63,7 +63,7 @@ We welcome contributions! Please follow these steps:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-This project is a starting point for a Flutter application.![WhatsApp Image 2025-02-02 at 10 27 12_f4a4c27d](https://github.com/user-attachments/assets/1e35a7a8-52ae-46b5-b687-6aae716762dc)
+This project is a starting point for a Flutter application.
 
 
 A few resources to get you started if this is your first Flutter project:
