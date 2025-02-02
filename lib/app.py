@@ -1,13 +1,21 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import google.generativeai as genai
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # Enable CORS for Flutter
 
-# Set up Gemini AI API key
-GENAI_API_KEY = "your-gemini-api-key-here"
+# Set up Gemini AI API key from environment variable
+GENAI_API_KEY = os.getenv("GENAI_API_KEY")
+if not GENAI_API_KEY:
+    raise ValueError("API key is missing. Please set it in the .env file.")
+
 genai.configure(api_key=GENAI_API_KEY)
 
 @app.route("/chat", methods=["POST"])

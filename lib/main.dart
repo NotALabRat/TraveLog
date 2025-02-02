@@ -35,7 +35,10 @@ class _CreateItineraryPageState extends State<CreateItineraryPage> {
   String? selectedDestination;
   DateTime? selectedDate;
   String? selectedBudget;
+  String mustVisitPlaces = "";
   String itinerary = "Your itinerary will appear here.";
+  List<String> selectedPreferences = []; // To store selected preferences
+  String numberOfDays = ""; // To store the maximum number of stay
 
   final List<String> destinations = [
     "Paris",
@@ -45,6 +48,19 @@ class _CreateItineraryPageState extends State<CreateItineraryPage> {
     "Dubai"
   ];
   final List<String> budgetOptions = ["Low", "Medium", "High"];
+
+  // List of cuisine and dietary preferences
+  final List<String> preferences = [
+    "Vegetarian",
+    "Non-Vegetarian",
+    "Vegan",
+    "Italian",
+    "Chinese",
+    "Indian",
+    "Desserts",
+    "Meals",
+    "Cafes"
+  ];
 
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -64,7 +80,8 @@ class _CreateItineraryPageState extends State<CreateItineraryPage> {
   Future<void> fetchItinerary() async {
     if (selectedDestination == null ||
         selectedDate == null ||
-        selectedBudget == null) {
+        selectedBudget == null ||
+        numberOfDays.isEmpty) {
       setState(() {
         itinerary = "Please select all fields.";
       });
@@ -73,10 +90,17 @@ class _CreateItineraryPageState extends State<CreateItineraryPage> {
 
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate!);
     String prompt =
-        "Create a travel itinerary for a trip to $selectedDestination on $formattedDate with a $selectedBudget budget. Include places to visit, restaurants, and accommodations.";
+        "Create a $numberOfDays-day travel itinerary for a trip to $selectedDestination on $formattedDate with a $selectedBudget budget. Include places to visit, restaurants, and accommodations.";
+    if (mustVisitPlaces.isNotEmpty) {
+      prompt += " Must-visit places: $mustVisitPlaces.";
+    }
+    if (selectedPreferences.isNotEmpty) {
+      prompt +=
+          " Dietary and cuisine preferences: ${selectedPreferences.join(", ")}.";
+    }
 
     const String apiKey =
-        "AIzaSyBZmER7mtVUYnP0aouNGAsgdZLTocfsMpA"; // Replace with your API Key
+        "AIzaSyBZmER7mtVUYnP0aouNGAsgdZLTocfsMpA"; // Replace with your actual API key
     final url = Uri.parse(
         "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey");
 
@@ -171,6 +195,56 @@ class _CreateItineraryPageState extends State<CreateItineraryPage> {
               onChanged: (String? newValue) {
                 setState(() {
                   selectedBudget = newValue;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            const Text("Maximum Number of Stay (Days):",
+                style: TextStyle(fontSize: 18)),
+            TextField(
+              decoration: const InputDecoration(
+                hintText: "Enter the number of days",
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  numberOfDays = value;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            const Text("Cuisine and Dietary Preferences:",
+                style: TextStyle(fontSize: 18)),
+            Wrap(
+              spacing: 8.0,
+              children: preferences.map((preference) {
+                return FilterChip(
+                  label: Text(preference),
+                  selected: selectedPreferences.contains(preference),
+                  onSelected: (bool selected) {
+                    setState(() {
+                      if (selected) {
+                        selectedPreferences.add(preference);
+                      } else {
+                        selectedPreferences.remove(preference);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            const Text("Must-Visit Places (Optional):",
+                style: TextStyle(fontSize: 18)),
+            TextField(
+              decoration: const InputDecoration(
+                hintText: "Enter must-visit places, separated by commas",
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  mustVisitPlaces = value;
                 });
               },
             ),
