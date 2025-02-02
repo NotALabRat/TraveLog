@@ -2,6 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+void main() {
+  runApp(const TranslatorApp());
+}
+
+class TranslatorApp extends StatelessWidget {
+  const TranslatorApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'In-App Translator',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const TranslatorPage(),
+    );
+  }
+}
+
 class TranslatorPage extends StatefulWidget {
   const TranslatorPage({super.key});
 
@@ -23,6 +44,13 @@ class _TranslatorPageState extends State<TranslatorPage> {
     "Hindi"
   ];
 
+  bool _isLoading = false;
+
+  // Define your Gemini API key here
+  final String apiKey =
+      "AIzaSyBZmER7mtVUYnP0aouNGAsgdZLTocfsMpA"; // Replace with your actual API key
+
+  // Function to handle translation using Gemini API
   Future<void> translateText() async {
     if (_textController.text.isEmpty || selectedLanguage == null) {
       setState(() {
@@ -34,10 +62,12 @@ class _TranslatorPageState extends State<TranslatorPage> {
     String prompt =
         "Translate the following text into $selectedLanguage: \"${_textController.text}\"";
 
-    const String apiKey =
-        "AIzaSyBZmER7mtVUYnP0aouNGAsgdZLTocfsMpA"; // Replace with your actual API key
     final url = Uri.parse(
         "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey");
+
+    setState(() {
+      _isLoading = true;
+    });
 
     try {
       final response = await http.post(
@@ -60,15 +90,18 @@ class _TranslatorPageState extends State<TranslatorPage> {
           translatedText = data["candidates"][0]["content"]["parts"][0]
                   ["text"] ??
               "No translation available.";
+          _isLoading = false;
         });
       } else {
         setState(() {
           translatedText = "Error: ${response.statusCode} - ${response.body}";
+          _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
         translatedText = "Failed to connect to server: $e";
+        _isLoading = false;
       });
     }
   }
@@ -113,8 +146,10 @@ class _TranslatorPageState extends State<TranslatorPage> {
             const SizedBox(height: 30),
             Center(
               child: ElevatedButton(
-                onPressed: translateText,
-                child: const Text("Translate"),
+                onPressed: _isLoading ? null : translateText,
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text("Translate"),
               ),
             ),
             const SizedBox(height: 30),
