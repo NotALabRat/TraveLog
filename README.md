@@ -29,8 +29,10 @@ o	Dietary and accommodation preferences
 •	APIs Used: 
 
 o	Google Maps API (for location services and navigation)
-o	Google Translate API (for language translation)
-o	Gemini API / GPT (for AI-powered itinerary recommendations and assistance)
+o	Gemini AI API (for language translation)
+o	Gemini API (for AI-powered itinerary recommendations and assistance)
+•   Backend: Flask
+•   Connection between modules : XML Connector
 
 ## Installation
 1.	Clone the repository: 
