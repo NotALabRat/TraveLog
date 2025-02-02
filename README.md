@@ -18,6 +18,37 @@ TraveLog is an all-in-one travel companion app designed to enhance the travel ex
 
 ## Problem Statement
 
+Travel planning and management can often be overwhelming and time-consuming. Travelers face several challenges such as finding budget-friendly flights, creating detailed itineraries, managing essential travel documents, and navigating foreign languages while traveling. This can result in confusion, missed opportunities, and inefficient use of time, ultimately affecting the overall travel experience.
+
+## The solution
+
+TraveLog is your all-in-one travel companion, designed to make trips effortless and enjoyable:
+
+Budget-Friendly Flight Booking: Find and book affordable flights with ease, ensuring the best deals for your trip.
+Itinerary Planning: Get personalized suggestions for destinations, restaurants, accommodations, and activities based on your preferences and budget.
+Document Assistance: Manage essential travel documents like visas, insurance, and passports, all in one place.
+Real-Time Translation: Break language barriers with instant text and voice translation for smooth communication anywhere.
+
+## Technical Details
+
+Technologies/components used:
+
+Languages used:
+-Python
+-Dart
+-Javascript
+
+Libraries & Frameworks used:
+-Flutter SDK
+-Gemini API
+-Dart built-in libraries
+-HTTP
+-Intl
+
+Tools used:
+-Flutter
+
+## Implementation
 
 
 ## Features
