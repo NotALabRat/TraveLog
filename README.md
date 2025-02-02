@@ -85,13 +85,14 @@ Provides a user-friendly experience for seamless travel.
 TraveLog - HomePage
 
 ![WhatsApp Image 2025-02-02 at 10 27 12_d42aae7d](https://github.com/user-attachments/assets/54b5cf05-aa3e-47ba-8bc7-2c97d641bff0)
-Creating Itinerary
+Translation Functionality
 
 ![WhatsApp Image 2025-02-02 at 10 27 12_f4a4c27d](https://github.com/user-attachments/assets/1e35a7a8-52ae-46b5-b687-6aae716762dc)
-Translation Functionality
+Creating Itinerary
 
 ## Diagrams
 ![Untitled-2025-02-02-1142](https://github.com/user-attachments/assets/b98c4af3-4226-4ce0-a406-0320f2b95967)
+
 User input -> Gemini API -> Output -> Flutter
 
 ## Project Demo
